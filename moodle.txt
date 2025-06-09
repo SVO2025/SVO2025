@@ -1,0 +1,6 @@
+mariadb -u root
+CREATE DATABASE moodledb;
+CREATE USER 'moodle'@'%' IDENTIFIED BY 'P@ssw0rd';
+GRANT ALL PRIVILEGES ON moodledb.* TO 'moodle'@'%' WITH GRANT OPTION;
+sed -i "s/; max_input_vars = 1000/max_input_vars = 5000/g" /etc/php/8.2/apache2-mod_php/php.ini
+systemctl enable --now httpd2
