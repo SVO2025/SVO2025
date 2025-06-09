@@ -1,0 +1,31 @@
+apt-get update && apt-get install -y postgresql15-server zabbix-server-pgsql
+/etc/init.d/postgresql initdb
+systemctl enable --now postgresql
+su - postgres -s /bin/sh -c 'createuser --no-superuser --no-createdb --no-createrole --encrypted --pwprompt zabbix'
+su - postgres -s /bin/sh -c 'createdb -O zabbix zabbix'
+systemctl restart postgresql
+rpm -ql zabbix-common-database-pgsql | grep schema.sql
+su - postgres -s /bin/sh -c 'psql -U zabbix -f /usr/share/doc/zabbix-common-database-pgsql-*/schema.sql zabbix'
+su - postgres -s /bin/sh -c 'psql -U zabbix -f /usr/share/doc/zabbix-common-database-pgsql-*/images.sql zabbix'
+su - postgres -s /bin/sh -c 'psql -U zabbix -f /usr/share/doc/zabbix-common-database-pgsql-*/data.sql zabbix'
+apt-get install -y apache2 apache2-mod_php8.2
+systemctl enable --now httpd2
+apt-get install -y php8.2 php8.2-{mbstring,sockets,gd,xmlreader,pgsql,ldap,openssl}
+vim /etc/php/8.2/apache2-mod_php/php.ini
+(max_execution_time = 600)
+(max_input_time = 600)
+(memory_limit = 256M)
+(post_max_size = 32M)
+(date.timezone = Europa/Kaliningrad)
+(always_populate_raw_post_data = -1)
+systemctl restrart httpd2
+vim /etc/zabbix/zabbix_server.conf
+(DBHost=localhost)
+(DBName=zabbix)
+(DBUser=zabbix)
+(DBPassword=P@ssw0rd) 
+systemctl enable --now zabbix_pgsql
+apt-get install zabbix-phpfrontend-{apache2,php8.2} -y
+ln -s /etc/httpd2/conf/addon.d/A.zabbix.conf /etc/httpd2/conf/extra-enabled/
+chown apache2:apache2 /var/www/webapps/zabbix/ui/conf
+systemctl restrart httpd2
