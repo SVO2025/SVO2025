@@ -1,0 +1,18 @@
+conn gre-tunnel
+	leftsubnet=172.16.40.0/28
+	left=172.16.40.10
+	right=172.16.50.10
+	rightsubnet=172.16.50.0/28
+	auto=start
+	authby=secret
+	keyexchange=ikev2
+	ike=aes256-sha1-modp1024
+	esp=aes256-sha1
+	pfs=no
+	type=tunnel
+
+
+
+
+ipsec.secret
+172.16.40.10 172.16.50.10 : PSK "P@ssw0rd"
