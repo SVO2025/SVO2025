@@ -1,0 +1,34 @@
+apt-get install -y nginx
+cd /etc/nginx/sites-available.d/
+vim proxy.conf
+
+server {
+        listen 80
+        server_name moodle.au-team.irpo
+
+        location / {
+                proxy_pass http://192.1688.100.2;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP$remote_addr;
+                proxy_set_header X-Forwarder-For $proxy_add_x_forwarder_for;
+                proxy_set_header X-Forwarder-Proto $scheme;
+        }
+}
+                
+server {
+        listen 80
+        server_name wiki.au-team.irpo
+
+        location / {
+                proxy_pass http://192.1688.200.2;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP$remote_addr;
+                proxy_set_header X-Forwarder-For $proxy_add_x_forwarder_for;
+                proxy_set_header X-Forwarder-Proto $scheme;
+        }
+}
+
+ln -s /etc/nginx/sites-available.d/proxy.conf /etc/nginx/sites-enabled.d/
+nginx -t
+systemctl restart nginx
+systemctl enable --now nginx
