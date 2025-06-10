@@ -1,0 +1,9 @@
+Веб-сервер	Apache2
+PHP-модули	libapache2-mod-php, php-mysql, php-xml, php-gd, php-intl, php-curl, php-zip, php-xmlrpc, php-soap, php-mbstring, php-ldap
+База данных	MariaDB
+Название базы данных	moodledb
+Пользователь базы данных	moodle
+Пароль пользователя базы данных	P@ssw0rd
+Каталог установки Moodle	/var/www/html/moodle
+Каталог хранения файлов курса	/var/moodledata
+Версия Moodle	последняя стабильная (скачана из официального сайта)
